@@ -1,0 +1,53 @@
+- name: Instalar Docker e subir Apache
+  hosts: servidores
+  become: yes
+
+  tasks:
+
+	- name: Atualizar pacotes (Debian/Ubuntu)
+  	apt:
+    	update_cache: yes
+
+	- name: Instalar dependências
+  	apt:
+    	name:
+      	- apt-transport-https
+      	- ca-certificates
+      	- curl
+      	- software-properties-common
+    	state: present
+
+	- name: Adicionar chave GPG do Docker
+  	apt_key:
+    	url: https://download.docker.com/linux/ubuntu/gpg
+    	state: present
+
+	- name: Adicionar repositório do Docker
+  	apt_repository:
+    	repo: deb https://download.docker.com/linux/ubuntu focal stable
+    	state: present
+
+	- name: Instalar Docker
+  	apt:
+    	name: docker-ce
+    	state: latest
+
+	- name: Garantir que o Docker está rodando
+  	service:
+    	name: docker
+    	state: started
+    	enabled: yes
+
+	- name: Instalar módulo Python do Docker
+  	apt:
+    	name: python3-docker
+    	state: present
+
+	- name: Criar container Apache
+  	docker_container:
+    	name: apache_container
+    	image: httpd:latest
+    	state: started
+    	restart_policy: always
+    	ports:
+      	- "80:80"
