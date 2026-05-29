@@ -1,6 +1,6 @@
 - name: Instalar Docker e subir Apache
-  hosts: servidores
-  become: aws
+  hosts: aws
+  become: yes
 
   tasks:
 
