@@ -51,3 +51,6 @@
       restart_policy: always
       ports:
         - "80:80"
+      volumes:
+      - /home/ubuntu/site:/usr/local/apache2/htdocs/
+
